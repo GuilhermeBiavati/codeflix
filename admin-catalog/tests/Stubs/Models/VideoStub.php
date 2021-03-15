@@ -10,7 +10,7 @@ use Illuminate\Support\Facades\Schema;
 
 class CastMenberStub extends Model
 {
-    protected $table = 'cast_menbers_stubs';
+    protected $table = 'videos_stubs';
     protected $fillable = [
         'title',
         'description',
@@ -20,11 +20,9 @@ class CastMenberStub extends Model
         'duration'
     ];
 
-    protected $dates = ['deleted_at'];
-
     public static function createTable()
     {
-        Schema::create('cast_menbers_stubs', function (Blueprint $table) {
+        Schema::create('videos_stubs', function (Blueprint $table) {
             $table->bigIncrements('id');
             $table->string('title');
             $table->text('description');
@@ -38,6 +36,6 @@ class CastMenberStub extends Model
 
     public static function dropTable()
     {
-        Schema::dropIfExists('cast_menbers_stubs');
+        Schema::dropIfExists('videos_stubs');
     }
 }

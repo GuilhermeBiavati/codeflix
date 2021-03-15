@@ -14,7 +14,7 @@ class CreateVideosTable extends Migration
     public function up()
     {
         Schema::create('videos', function (Blueprint $table) {
-            $table->uuid('id')->primery();
+            $table->uuid('id')->primary();
             $table->string('title');
             $table->text('description');
             $table->text('year_lauched');

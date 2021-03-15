@@ -18,7 +18,7 @@ class VideoTest extends TestCase
      */
     public function testList()
     {
-        factory(Video::class, 1)->create();
+        factory(Video::class, 1)->create()->first();
 
         $videos = Video::all();
 

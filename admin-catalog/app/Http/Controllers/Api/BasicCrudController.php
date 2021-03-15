@@ -26,8 +26,8 @@ abstract class BasicCrudController extends Controller
 
     public function store(Request $request)
     {
-        $validated = $this->validate($request, $this->rulesStore());
-        return $this->model()::create($validated)->refresh();
+        $validatedData = $this->validate($request, $this->rulesStore());
+        return $this->model()::create($validatedData)->refresh();
     }
 
     public function show($id)
@@ -58,53 +58,4 @@ abstract class BasicCrudController extends Controller
         $obj->delete();
         return response()->noContent();
     }
-
-
-
-    // /**
-    //  * Store a newly created resource in storage.
-    //  *
-    //  * @param  \Illuminate\Http\Request  $request
-    //  * @return \Illuminate\Http\Response
-    //  */
-    // public function store(CategoryRequest $request)
-    // {
-    //     return Category::create($request->all())->refresh();
-    // }
-
-    // /**
-    //  * Display the specified resource.
-    //  *
-    //  * @param  \App\Models\Category  $category
-    //  * @return \Illuminate\Http\Response
-    //  */
-    // public function show(Category $category)
-    // {
-    //     return $category;
-    // }
-
-    // /**
-    //  * Update the specified resource in storage.
-    //  *
-    //  * @param  \Illuminate\Http\Request  $request
-    //  * @param  \App\Models\Category  $category
-    //  * @return \Illuminate\Http\Response
-    //  */
-    // public function update(CategoryRequest $request, Category $category)
-    // {
-    //     $category->update($request->all());
-    //     return $category;
-    // }
-
-    // /**
-    //  * Remove the specified resource from storage.
-    //  *
-    //  * @param  \App\Models\Category  $category
-    //  * @return \Illuminate\Http\Response
-    //  */
-    // public function destroy(Category $category)
-    // {
-    //     $category->delete();
-    //     return response()->noContent();
-    // }
 }

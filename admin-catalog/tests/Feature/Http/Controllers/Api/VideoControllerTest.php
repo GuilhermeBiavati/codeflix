@@ -14,17 +14,26 @@ class VideoControllerTest extends TestCase
     use DatabaseMigrations, TestValidations, TestSaves;
 
     private $video;
+    private $sendData;
+
 
     protected function setUp(): void
     {
         parent::setUp();
         $this->video = factory(Video::class)->create();
+
+        $this->sendData = [
+            'title' => 'title',
+            'description' => 'description',
+            'year_lauched' => '2010',
+            'rating' => Video::RATING_LIST[0],
+            'duration' => 90
+        ];
     }
 
     public function testIndex()
     {
         $response = $this->get(route('videos.index'));
-
         $response->assertStatus(200)->assertJson([$this->video->toArray()]);
     }
 
@@ -43,6 +52,8 @@ class VideoControllerTest extends TestCase
             'year_lauched' => '',
             'rating' => '',
             'duration' => '',
+            'categories_id' => '',
+            'genres_id' => '',
         ];
 
         $this->assertInvalidationInStoreAction($data, 'required');
@@ -100,37 +111,53 @@ class VideoControllerTest extends TestCase
         $this->assertInvalidationInUpdateAction($data, 'in');
     }
 
+    public function testInvalidationCategoriesIdField()
+    {
+        $data = [
+            'categories_id' => 'fsdaf',
+        ];
+
+        $this->assertInvalidationInStoreAction($data, 'array');
+        $this->assertInvalidationInUpdateAction($data, 'array');
+
+        $data = [
+            'categories_id' => 'fsdaf',
+        ];
+
+        $this->assertInvalidationInStoreAction($data, 'exists');
+        $this->assertInvalidationInUpdateAction($data, 'exists');
+    }
+
+    public function testInvalidationGenresIdField()
+    {
+        $data = [
+            'genres_id' => 'fsdaf',
+        ];
+
+        $this->assertInvalidationInStoreAction($data, 'array');
+        $this->assertInvalidationInUpdateAction($data, 'array');
+
+        $data = [
+            'genres_id' => 'fsdaf',
+        ];
+
+        $this->assertInvalidationInStoreAction($data, 'exists');
+        $this->assertInvalidationInUpdateAction($data, 'exists');
+    }
+
 
     public function testStore()
     {
-
-        $data = [
-            [
-                'name' => 'test',
-                'type' => Video::TYPE_ACTOR
-            ],
-            [
-                'name' => 'test',
-                'type' => Video::TYPE_DIRECTOR
-            ]
-        ];
-
-        foreach ($data as $key => $value) {
-            $this->assertStore($value, $value + ['deleted_at' => null]);
-        }
+        $this->assertStore($this->sendData, $this->sendData + ['opened' => false]);
+        $this->assertStore($this->sendData + ['opened' => true], $this->sendData + ['opened' => true]);
+        $this->assertStore($this->sendData + ['rating' => Video::RATING_LIST[1]], $this->sendData + ['rating' => Video::RATING_LIST[1]]);
     }
 
     public function testUpdate()
     {
-        $this->video = factory(Video::class)->create([
-            'type' => Video::TYPE_ACTOR
-
-        ]);
-        $data = [
-            'name' => 'test',
-            'type' => Video::TYPE_DIRECTOR
-        ];
-        $this->assertUpdate($data, $data + ['deleted_at' => null]);
+        $this->assertUpdate($this->sendData, $this->sendData + ['opened' => false]);
+        $this->assertUpdate($this->sendData + ['opened' => true], $this->sendData + ['opened' => true]);
+        $this->assertUpdate($this->sendData + ['rating' => Video::RATING_LIST[1]], $this->sendData + ['rating' => Video::RATING_LIST[1]]);
     }
 
     public function testDestroy()
@@ -147,7 +174,7 @@ class VideoControllerTest extends TestCase
 
     protected function routeUpdate()
     {
-        return route('videos.update', $this->video);
+        return route('videos.update', $this->video->id);
     }
 
     protected function model()

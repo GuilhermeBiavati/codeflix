@@ -12,14 +12,7 @@ class Video extends Model
 
     const RATING_LIST = ['L', '10', '12', '14', '16', '18'];
 
-    protected $fillable = [
-        'title',
-        'description',
-        'year_lauched',
-        'opened',
-        'rating',
-        'duration'
-    ];
+    protected $fillable = ['title', 'description', 'opened', 'year_lauched', 'rating', 'duration'];
 
     protected $dates = ['deleted_at'];
 
@@ -31,4 +24,14 @@ class Video extends Model
     ];
 
     public $increment = false;
+
+    public function categories()
+    {
+        return $this->belongsToMany(Category::class);
+    }
+
+    public function genres()
+    {
+        return $this->belongsToMany(Genre::class);
+    }
 }
