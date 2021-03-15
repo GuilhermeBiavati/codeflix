@@ -10,7 +10,7 @@ use Illuminate\Foundation\Testing\WithFaker;
 use Ramsey\Uuid\Uuid;
 use Tests\TestCase;
 
-class genreTest extends TestCase
+class GenreTest extends TestCase
 {
 
     use DatabaseMigrations;
@@ -29,8 +29,8 @@ class genreTest extends TestCase
 
         $genreKey = array_keys($genres->first()->getAttributes());
 
-        $this->assertNotEqualsCanonicalizing([
-            'id', 'name', 'created_at', 'updated_at', 'deleted_at'
+        $this->assertEqualsCanonicalizing([
+            'id', 'name', 'is_active', 'created_at', 'updated_at', 'deleted_at'
         ], $genreKey);
     }
 

@@ -1,29 +1,28 @@
 <?php
 
-namespace App\Http\Controllers\Api;
+namespace Tests\Stubs\Controllers;
 
-use App\Http\Controllers\Controller;
-use App\Http\Requests\CategoryRequest;
-use App\Models\Category;
-use Illuminate\Http\Request;
+use App\Http\Controllers\Api\BasicCrudController;
+use Tests\Stubs\Models\GenreStub;
 
-class CategoryController extends BasicCrudController
+class GenreControllerStub extends BasicCrudController
 {
+
     private $rules = [
         'name' => 'required|max:255',
-        'description' => 'nullable',
         'is_active' => 'boolean'
     ];
 
     protected function model()
     {
-        return Category::class;
+        return GenreStub::class;
     }
 
     protected function rulesStore()
     {
         return $this->rules;
     }
+
     protected function rulesUpdate()
     {
         return $this->rules;

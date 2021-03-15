@@ -29,8 +29,8 @@ class CategoryTest extends TestCase
 
         $categoryKey = array_keys($categories->first()->getAttributes());
 
-        $this->assertNotEqualsCanonicalizing([
-            'id', 'name', 'description', 'created_at', 'updated_at', 'deleted_at'
+        $this->assertEqualsCanonicalizing([
+            'id', 'name', 'is_active', 'description', 'created_at', 'updated_at', 'deleted_at'
         ], $categoryKey);
     }
 

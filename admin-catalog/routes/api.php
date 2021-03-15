@@ -23,4 +23,6 @@ Route::group(['namespace' => 'Api'], function () {
     $expeptCreateAndEdit = ['except' => ['create', 'edit']];
     Route::resource('categories', 'CategoryController', $expeptCreateAndEdit);
     Route::resource('genres', 'GenreController', $expeptCreateAndEdit);
+    Route::resource('cast_menbers', 'CastMenberController', $expeptCreateAndEdit);
+    Route::resource('videos', 'VideoController', $expeptCreateAndEdit);
 });
