@@ -8,7 +8,7 @@ use Illuminate\Database\Eloquent\SoftDeletes;
 use Illuminate\Database\Schema\Blueprint;
 use Illuminate\Support\Facades\Schema;
 
-class CastMenberStub extends Model
+class VideoStub extends Model
 {
     protected $table = 'videos_stubs';
     protected $fillable = [

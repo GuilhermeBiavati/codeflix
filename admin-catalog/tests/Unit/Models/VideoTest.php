@@ -2,19 +2,19 @@
 
 namespace Tests\Unit\Models;
 
-use App\Models\Category;
+use App\Models\Video;
 use PHPUnit\Framework\TestCase;
 use Illuminate\Database\Eloquent\SoftDeletes;
 use App\Models\Traits\Uuid;
 
-class CategoryTest extends TestCase
+class VideoTest extends TestCase
 {
-    private $category;
+    private $video;
 
     protected function setUp(): void
     {
         parent::setUp();
-        $this->category = new Category();
+        $this->video = new Video();
     }
 
     protected function tearDown(): void
@@ -28,9 +28,8 @@ class CategoryTest extends TestCase
      */
     public function testFillableAttribute()
     {
-        $fillable = ['name', 'description', 'is_active'];
-
-        $this->assertEquals($fillable, $this->category->getFillable());
+        $fillable = ['title', 'description', 'opened', 'year_lauched', 'rating', 'duration'];
+        $this->assertEquals($fillable, $this->video->getFillable());
     }
 
     public function testIfUseTraitsAttribute()
@@ -39,32 +38,34 @@ class CategoryTest extends TestCase
             SoftDeletes::class, Uuid::class
         ];
 
-        $categoryTraits = array_keys(class_uses(Category::class));
-        $this->assertEquals($traits, $categoryTraits);
+        $videoTraits = array_keys(class_uses(Video::class));
+        $this->assertEquals($traits, $videoTraits);
     }
 
     public function testCastsAttribute()
     {
-        $casts = ['id' => 'string', 'is_active' => 'boolean'];
+        $casts = [
+            'id' => 'string',
+            'opened' => 'boolean',
+            'year_lauched' => 'integer',
+            'duration' => 'integer'
+        ];
 
-        $this->assertEquals($casts, $this->category->getCasts());
+        $this->assertEquals($casts, $this->video->getCasts());
     }
 
     public function testIncrementingAttribute()
     {
 
-        $this->assertFalse($this->category->incrementing);
+        $this->assertFalse($this->video->incrementing);
     }
 
     public function testDatesAttribute()
     {
         $dates = ['created_at', 'updated_at', 'deleted_at'];
-
-
         foreach ($dates as $date) {
-            $this->assertContains($date, $this->category->getDates());
+            $this->assertContains($date, $this->video->getDates());
         }
-
-        $this->assertCount(count($dates), $this->category->getDates());
+        $this->assertCount(count($dates), $this->video->getDates());
     }
 }

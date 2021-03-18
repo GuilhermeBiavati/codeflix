@@ -3,6 +3,7 @@
 namespace App\Http\Controllers\Api;
 
 use App\Models\Video;
+use App\Rules\GenresHasCategoriesRule;
 use Illuminate\Http\Request;
 use Illuminate\Support\Facades\DB;
 
@@ -10,7 +11,7 @@ class VideoController extends BasicCrudController
 {
     private $rules;
 
-    public function __construct()
+    public function __construct(Request $request)
     {
         $this->rules = [
             'title' => 'required|max:255',
@@ -19,35 +20,52 @@ class VideoController extends BasicCrudController
             'opened' => 'boolean',
             'rating' => 'required|in:' . implode(',', Video::RATING_LIST),
             'duration' => 'required|integer',
-            'categories_id' => 'required|array|exists:categories,id',
-            'genres_id' => 'required|array|exists:genres,id'
+            'categories_id' => 'required|array|exists:categories,id,deleted_at,NULL',
+            'genres_id' => ['required', 'array', 'exists:genres,id,deleted_at,NULL']
         ];
     }
 
     public function store(Request $request)
     {
+        $this->addRuleIfGenreHasCategories($request);
         $validated = $this->validate($request, $this->rulesStore());
-
-        $video = DB::transaction(function () use ($validated) {
-            $video = $this->model()::create($validated)->first();
-            $video->categories()->sync($validated['categories_id']);
-            $video->genres()->sync($validated['genres_id']);
+        $self = $this;
+        $video = DB::transaction(function () use ($validated, $self) {
+            $video = Video::create($validated);
+            $self->handleRelations($video, $validated);
             return $video;
         });
-
-
         return $video->refresh();
     }
 
     public function update(Request $request, $id)
     {
         $video = $this->findOrFail($id);
+        $this->addRuleIfGenreHasCategories($request);
         $validated = $this->validate($request, $this->rulesUpdate());
-        $video->update($validated);
-        $video->categories()->sync($validated['categories_id']);
-        $video->genres()->sync($validated['genres_id']);
+        $self = $this;
+        $video = DB::transaction(function () use ($validated, $self, $video) {
+            $video->update($validated);
+            $self->handleRelations($video, $validated);
+            return $video;
+        });
         return $video;
     }
+
+    protected function addRuleIfGenreHasCategories(Request $request)
+    {
+        $categoriesId = $request->get('categories_id');
+        $categoriesId = is_array($categoriesId) ? $categoriesId : [];
+        $this->rules['genres_id'][] = new GenresHasCategoriesRule($categoriesId);
+    }
+
+    protected function handleRelations($video, $validated)
+    {
+        $video->categories()->sync($validated['categories_id']);
+        $video->genres()->sync($validated['genres_id']);
+    }
+
+
     protected function model()
     {
         return Video::class;

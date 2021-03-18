@@ -7,7 +7,7 @@ use App\Models\CastMenber;
 use App\Models\Video;
 use Tests\Stubs\Models\VideoStub;
 
-class CastMenberControllerStub extends BasicCrudController
+class VideoControllerStub extends BasicCrudController
 {
 
     private $rules;

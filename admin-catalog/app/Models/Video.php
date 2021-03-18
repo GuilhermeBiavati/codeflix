@@ -12,6 +12,8 @@ class Video extends Model
 
     const RATING_LIST = ['L', '10', '12', '14', '16', '18'];
 
+    protected $table = 'videos';
+
     protected $fillable = ['title', 'description', 'opened', 'year_lauched', 'rating', 'duration'];
 
     protected $dates = ['deleted_at'];
@@ -23,15 +25,16 @@ class Video extends Model
         'duration' => 'integer'
     ];
 
-    public $increment = false;
+    // public $increment = false;
+    public $incrementing = false;
 
     public function categories()
     {
-        return $this->belongsToMany(Category::class);
+        return $this->belongsToMany(Category::class)->withTrashed();
     }
 
     public function genres()
     {
-        return $this->belongsToMany(Genre::class);
+        return $this->belongsToMany(Genre::class)->withTrashed();
     }
 }
