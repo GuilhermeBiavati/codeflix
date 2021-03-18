@@ -14,9 +14,6 @@ class GenreSeeder extends Seeder
     public function run()
     {
         $categories = Category::all();
-
-        dd($categories);
-
         factory(Genre::class, 100)->create()->each(function (Genre $genre) use ($categories) {
             $categoriesId = $categories->random(5)->pluck('id')->toArray();
             $genre->categories()->attach($categoriesId);
