@@ -198,50 +198,50 @@ class VideoControllerTest extends TestCase
     //     ];
     // }
 
-    public function testRollbackStore()
-    {
+    // public function testRollbackStore()
+    // {
 
-        $category = factory(Category::class)->create();
-        $genre = factory(Genre::class)->create();
-        $genre->categories()->attach($category->id);
+    //     $category = factory(Category::class)->create();
+    //     $genre = factory(Genre::class)->create();
+    //     $genre->categories()->attach($category->id);
 
-        $controller = \Mockery::mock(VideoController::class)->makePartial()->shouldAllowMockingProtectedMethods();
-        $controller->shouldReceive('validate')->withAnyArgs()->andReturn($this->sendData + ['categories_id' => [$category->id], 'genres_id' => [$genre->id]]);
-        $controller->shouldReceive('rulesStore')->withAnyArgs()->andReturn([]);
-        $controller->shouldReceive('handleRelations')->once()->andThrow(new TestException());
-        $request = \Mockery::mock(Request::class);
-        $request->shouldReceive('get')->withAnyArgs()->andReturn([]);
+    //     $controller = \Mockery::mock(VideoController::class)->makePartial()->shouldAllowMockingProtectedMethods();
+    //     $controller->shouldReceive('validate')->withAnyArgs()->andReturn($this->sendData + ['categories_id' => [$category->id], 'genres_id' => [$genre->id]]);
+    //     $controller->shouldReceive('rulesStore')->withAnyArgs()->andReturn([]);
+    //     $controller->shouldReceive('handleRelations')->once()->andThrow(new TestException());
+    //     $request = \Mockery::mock(Request::class);
+    //     $request->shouldReceive('get')->withAnyArgs()->andReturn([]);
 
-        $hasError = false;
-        try {
-            $controller->store($request);
-        } catch (TestException $exception) {
-            $hasError = true;
+    //     $hasError = false;
+    //     try {
+    //         $controller->store($request);
+    //     } catch (TestException $exception) {
+    //         $hasError = true;
 
-            $this->assertCount(1, Video::all());
-        }
-        $this->assertTrue($hasError);
-    }
+    //         $this->assertCount(1, Video::all());
+    //     }
+    //     $this->assertTrue($hasError);
+    // }
 
-    public function testRollbackUpdate()
-    {
-        $request = \Mockery::mock(Request::class);
-        $request->shouldReceive('get')->withAnyArgs()->andReturn([]);
-        $controller = \Mockery::mock(VideoController::class)->makePartial()->shouldAllowMockingProtectedMethods();
-        $controller->shouldReceive('findOrFail')->withAnyArgs()->andReturn($this->video);
-        $controller->shouldReceive('validate')->withAnyArgs()->andReturn($this->sendData + ['opened' => true]);
-        $controller->shouldReceive('rulesUpdate')->withAnyArgs()->andReturn([]);
-        $controller->shouldReceive('handleRelations')->once()->andThrow(new TestException());
+    // public function testRollbackUpdate()
+    // {
+    //     $request = \Mockery::mock(Request::class);
+    //     $request->shouldReceive('get')->withAnyArgs()->andReturn([]);
+    //     $controller = \Mockery::mock(VideoController::class)->makePartial()->shouldAllowMockingProtectedMethods();
+    //     $controller->shouldReceive('findOrFail')->withAnyArgs()->andReturn($this->video);
+    //     $controller->shouldReceive('validate')->withAnyArgs()->andReturn($this->sendData + ['opened' => true]);
+    //     $controller->shouldReceive('rulesUpdate')->withAnyArgs()->andReturn([]);
+    //     $controller->shouldReceive('handleRelations')->once()->andThrow(new TestException());
 
-        $hasError = false;
-        try {
-            $controller->update($request, 'sdfa');
-        } catch (TestException $exception) {
-            $hasError = true;
-            $this->assertCount(1, Video::all());
-        }
-        $this->assertTrue($hasError);
-    }
+    //     $hasError = false;
+    //     try {
+    //         $controller->update($request, 'sdfa');
+    //     } catch (TestException $exception) {
+    //         $hasError = true;
+    //         $this->assertCount(1, Video::all());
+    //     }
+    //     $this->assertTrue($hasError);
+    // }
 
     public function testDestroy()
     {

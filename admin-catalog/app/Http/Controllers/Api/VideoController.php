@@ -21,7 +21,8 @@ class VideoController extends BasicCrudController
             'rating' => 'required|in:' . implode(',', Video::RATING_LIST),
             'duration' => 'required|integer',
             'categories_id' => 'required|array|exists:categories,id,deleted_at,NULL',
-            'genres_id' => ['required', 'array', 'exists:genres,id,deleted_at,NULL']
+            'genres_id' => ['required', 'array', 'exists:genres,id,deleted_at,NULL'],
+            'video_file' => 'file|mimes:mp4|max:1000000'
         ];
     }
 
@@ -29,12 +30,7 @@ class VideoController extends BasicCrudController
     {
         $this->addRuleIfGenreHasCategories($request);
         $validated = $this->validate($request, $this->rulesStore());
-        $self = $this;
-        $video = DB::transaction(function () use ($validated, $self) {
-            $video = Video::create($validated);
-            $self->handleRelations($video, $validated);
-            return $video;
-        });
+        $video = $this->model()::create($validated);
         return $video->refresh();
     }
 
@@ -43,12 +39,7 @@ class VideoController extends BasicCrudController
         $video = $this->findOrFail($id);
         $this->addRuleIfGenreHasCategories($request);
         $validated = $this->validate($request, $this->rulesUpdate());
-        $self = $this;
-        $video = DB::transaction(function () use ($validated, $self, $video) {
-            $video->update($validated);
-            $self->handleRelations($video, $validated);
-            return $video;
-        });
+        $video->update($validated);
         return $video;
     }
 
@@ -58,13 +49,6 @@ class VideoController extends BasicCrudController
         $categoriesId = is_array($categoriesId) ? $categoriesId : [];
         $this->rules['genres_id'][] = new GenresHasCategoriesRule($categoriesId);
     }
-
-    protected function handleRelations($video, $validated)
-    {
-        $video->categories()->sync($validated['categories_id']);
-        $video->genres()->sync($validated['genres_id']);
-    }
-
 
     protected function model()
     {
