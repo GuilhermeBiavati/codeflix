@@ -3,8 +3,8 @@
 namespace Tests\Unit\Models\Traits;
 
 use Illuminate\Http\UploadedFile;
-use Illuminate\Support\Facades\Storage;
-use PHPUnit\Framework\TestCase;
+use Storage;
+use Tests\TestCase;
 use Tests\Stubs\Models\UploadFileStub;
 
 class UploadFilesUnitTest extends TestCase

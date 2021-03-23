@@ -80,13 +80,17 @@ class VideoTest extends TestCase
         $menberKey = array_keys($videos->first()->getAttributes());
 
         $this->assertEqualsCanonicalizing([
-            'id', 'title',
+            'id',
+            'title',
             'description',
             'year_lauched',
             'opened',
+            'video_file',
             'rating',
             'duration',
-            'created_at', 'updated_at', 'deleted_at'
+            'created_at',
+            'updated_at',
+            'deleted_at'
         ], $menberKey);
     }
 
