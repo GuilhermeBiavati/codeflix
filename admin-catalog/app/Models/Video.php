@@ -17,7 +17,7 @@ class Video extends Model
 
     protected $table = 'videos';
 
-    protected $fillable = ['title', 'description', 'opened', 'year_lauched', 'rating', 'duration'];
+    protected $fillable = ['title', 'description', 'opened', 'year_lauched', 'rating', 'duration', 'video_file', 'thumb_file'];
 
     protected $dates = ['deleted_at'];
 
@@ -30,7 +30,7 @@ class Video extends Model
 
     // public $increment = false;
     public $incrementing = false;
-    public static $fileFields = ['video_file'];
+    public static $fileFields = ['video_file', 'thumb_file'];
 
     // Evitar realizar regra de negocio nos Controllers
     public static function create(array $attributes = [])

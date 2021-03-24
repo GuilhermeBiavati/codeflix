@@ -1,6 +1,6 @@
 <?php
 
-namespace Tests\Feature\Models;
+namespace Tests\Feature\Models\Video;
 
 use App\Models\Category;
 use App\Models\Genre;
@@ -10,23 +10,17 @@ use Illuminate\Foundation\Testing\DatabaseMigrations;
 use Ramsey\Uuid\Uuid;
 use Tests\TestCase;
 
-class VideoTest extends TestCase
+class VideoCrudTest extends BaseVideoTestCase
 {
 
-    use DatabaseMigrations;
-
-    private $data;
+    private $fileFields = [];
 
     public function setUp(): void
     {
         parent::setUp();
-        $this->data = [
-            'title' => 'title',
-            'description' => 'description',
-            'year_lauched' => '2010',
-            'rating' => Video::RATING_LIST[0],
-            'duration' => 90,
-        ];
+        foreach (Video::$fileFields as $field) {
+            $this->fileFields[$field] = "$field.test";
+        }
     }
 
     public function testRollbackCreate()
@@ -86,6 +80,7 @@ class VideoTest extends TestCase
             'year_lauched',
             'opened',
             'video_file',
+            'thumb_file',
             'rating',
             'duration',
             'created_at',
@@ -96,10 +91,10 @@ class VideoTest extends TestCase
 
     public function testCreateWithBasicFields()
     {
-        $video = Video::create($this->data)->refresh();
+        $video = Video::create($this->data + $this->fileFields)->refresh();
         $this->assertTrue(Uuid::isValid($video->id));
         $this->assertFalse($video->opened);
-        $this->assertDatabaseHas('videos', $this->data + ['opened' => false]);
+        $this->assertDatabaseHas('videos', $this->data + $this->fileFields + ['opened' => false]);
         $video = Video::create($this->data + ['opened' => true]);
         $this->assertTrue($video->opened);
         $this->assertDatabaseHas('videos', ['opened' => true]);
@@ -117,12 +112,12 @@ class VideoTest extends TestCase
     public function testUpdateWithBasicFields()
     {
         $video = factory(Video::class)->create(['opened' => false]);
-        $video->update($this->data);
+        $video->update($this->data + $this->fileFields);
         $this->assertFalse($video->opened);
-        $this->assertDatabaseHas('videos', $this->data + ['opened' => false]);
+        $this->assertDatabaseHas('videos', $this->data +  $this->fileFields + ['opened' => false]);
 
-        $video = factory(Video::class)->create(['opened' => true]);
-        $video->update($this->data);
+        $video = factory(Video::class)->create(['opened' => false]);
+        $video->update($this->data +  $this->fileFields + ['opened' => true]);
         $this->assertTrue($video->opened);
         $this->assertDatabaseHas('videos', $this->data + ['opened' => true]);
     }
