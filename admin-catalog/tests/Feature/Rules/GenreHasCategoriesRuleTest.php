@@ -8,7 +8,7 @@ use App\Rules\GenresHasCategoriesRule;
 use Illuminate\Foundation\Testing\DatabaseMigrations;
 use Tests\TestCase;
 
-class GenreHasCategoriesRulesTest extends TestCase
+class GenreHasCategoriesRuleTest extends TestCase
 {
   use DatabaseMigrations;
 

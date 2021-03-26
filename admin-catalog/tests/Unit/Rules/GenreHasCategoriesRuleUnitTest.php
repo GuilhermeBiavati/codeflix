@@ -8,7 +8,7 @@ use Mockery\MockInterface;
 use ReflectionClass;
 use Tests\TestCase;
 
-class GenresHasCategoriesRuleUnitTest extends TestCase
+class GenreHasCategoriesRuleUnitTest extends TestCase
 {
   public function testCategoriesIdField()
   {

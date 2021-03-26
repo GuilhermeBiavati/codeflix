@@ -70,6 +70,10 @@ class Video extends Model
             }
 
             DB::commit();
+
+            if ($saved && count($files)) {
+                $this->deleteOldFiles();
+            }
             return $saved;
         } catch (Exception $exception) {
 
