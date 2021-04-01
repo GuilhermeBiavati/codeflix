@@ -2,31 +2,27 @@ steps:
 - id: "Rodando docker-compose"
   name: 'gcr.io/$PROJECT_ID/docker-compose:1.24.0'
   args: ['-f', 'admin-catalog/docker-compose.prod.yaml', 'up', '-d']
-  
-- id: "Rodando docker ps"
+
+- id: "Rodando composer"
   name: 'gcr.io/cloud-builders/docker'
-  args: ['ps']
+  args: ['exec','-t', 'micro-videos-app', 'composer','install']
 
-# - id: "Rodando composer"
-#   name: 'gcr.io/cloud-builders/docker'
-#   args: ['exec','-t', 'app', 'composer','install']
+- id: "Copiando .env"
+  name: 'gcr.io/cluoud-builders/docker'
+  args: ['exec','-t', 'micro-videos-app', 'cp','.env.example', '.env']
 
-# - id: "Copiando .env"
-#   name: 'gcr.io/cluoud-builders/docker'
-#   args: ['exec','-t', 'app', 'cp','.env.example', '.env']
+- id: "Copiando .env.testing"
+  name: 'gcr.io/cluoud-builders/docker'
+  args: ['exec','-t', 'micro-videos-app', 'cp','.env.testing.example', '.env.testing']
 
-# - id: "Copiando .env.testing"
-#   name: 'gcr.io/cluoud-builders/docker'
-#   args: ['exec','-t', 'app', 'cp','.env.testing.example', '.env.testing']
+- id: "Rodando key:generate"
+  name: 'gcr.io/cluoud-builders/docker'
+  args: ['exec','-t', 'micro-videos-app', 'php','/var/www/artisan', 'key:generate']
 
-# - id: "Rodando key:generate"
-#   name: 'gcr.io/cluoud-builders/docker'
-#   args: ['exec','-t', 'app', 'php','/var/www/artisan', 'key:generate']
+- id: "Rodando migrations"
+  name: 'gcr.io/cluoud-builders/docker'
+  args: ['exec','-t', 'micro-videos-app', 'php','/var/www/artisan', 'migrate']
 
-# - id: "Rodando migrations"
-#   name: 'gcr.io/cluoud-builders/docker'
-#   args: ['exec','-t', 'app', 'php','/var/www/artisan', 'migrate']
-
-# - id: "Rodando phpunit"
-#   name: 'gcr.io/cluoud-builders/docker'
-#   args: ['exec','-t', 'app', 'php','/var/www/vendor/bin/phpunit', '-c', '/var/www/phpunit.xml']
+- id: "Rodando phpunit"
+  name: 'gcr.io/cluoud-builders/docker'
+  args: ['exec','-t', 'micro-videos-app', 'php','/var/www/vendor/bin/phpunit', '-c', '/var/www/phpunit.xml']
