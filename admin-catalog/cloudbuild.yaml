@@ -4,8 +4,8 @@ steps:
   args: ['-f', 'admin-catalog/docker-compose.prod.yaml', 'up', '-d']
   
 - id: "Rodando composer"
-  name: 'gcr.io/cloud-builders/docker/admin-catalog'
-  args: ['exec','-t', 'app', 'composer','install']
+  name: 'gcr.io/cloud-builders/docker'
+  args: ['exec','-t', 'app', 'admin-catalog/composer','install']
 
 - id: "Copiando .env"
   name: 'gcr.io/cluoud-builders/docker'
